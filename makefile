@@ -24,4 +24,4 @@ run_geoconnex_bulk_container:
 	docker run --rm geoconnex_bulk
 
 run_geoconnex_bulk_container_local:
-	docker run --rm -v "$(PWD)":/data geoconnex_bulk --gpkg_file /data/mainstems_v3.gpkg
+	docker run --rm -v "$(PWD)":/data geoconnex_bulk --gpkg_file /data/mainstems.gpkg

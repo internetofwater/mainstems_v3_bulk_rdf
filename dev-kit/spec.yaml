@@ -22,7 +22,13 @@ permissions:
       - waterqualitydata.us
       - www.waterqualitydata.us
 
-      # source of the mainstems_v3.gpkg this integration reads
+      # source of the mainstems.gpkg this integration reads (a GitHub
+      # release asset; github.com redirects to release-assets.githubusercontent.com,
+      # which serves the actual blob)
+      - github.com
+      - release-assets.githubusercontent.com
+
+      # hydroshare references if necessary for debugging
       - www.hydroshare.org
       - hydroshare.org
 
@@ -43,10 +49,10 @@ permissions:
 
       # w3id.org is a redirector; the SAL Module spec it serves is hosted on
       # GitHub Pages, so the target host has to be allowed as well as w3id.org.
+      # (github.com itself is allowed above, for the mainstems.gpkg release asset.)
       - w3id.org
       - cgs-earth.github.io
       - raw.githubusercontent.com
-      - github.com
 
       # schema.org serves HTML to SAL's Accept header, so validation falls back to
       # the bundled copy in build/vocab. Allowed anyway so the fetch fails on

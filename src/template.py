@@ -19,9 +19,15 @@ LOGGER = logging.getLogger(__name__)
 # The dataset described in AGENTS.md. Mainstems is a static, versioned
 # reference dataset (unlike e.g. WQP or a live API), so the container reads
 # it directly -- there is no separate crawl/geoparquet-export stage.
+#
+# This is the v3.2 release from internetofwater/ref_rivers on GitHub, not the
+# mainstems_v3.gpkg published on HydroShare. The HydroShare copy has a known
+# data bug where downstream_mainstem_id is blank or self-referential for
+# effectively every row (see git history / README.md); this release fixes
+# that -- see downstream_waterbody() below.
 DEFAULT_GPKG_URL: Final[str] = (
-    "https://www.hydroshare.org/resource/3295a17b4cc24d34bd6a5c5aaf753c50/"
-    "data/contents/mainstems_v3.gpkg"
+    "https://github.com/internetofwater/ref_rivers/releases/download/"
+    "v3.2/mainstems.gpkg"
 )
 
 # Columns pulled from the gpkg's `mainstems` table. See README.md for how
@@ -99,12 +105,11 @@ def superseded_by(row: dict) -> dict | list[dict] | None:
 
 def downstream_waterbody(row: dict) -> dict | None:
     downstream = clean(row["downstream_mainstem_id"])
-    # In the currently published mainstems_v3.gpkg, this column is either
-    # blank or set to the record's own uri for essentially every row (852469
-    # of 852653, and 0 rows where it points anywhere else) -- a known data
-    # bug, since reference.geoconnex.us's live database does serve real
-    # downstream links here. Treat a self-referential value as "unknown"
-    # instead of emitting a self-loop; see README.md.
+    # A blank downstream_mainstem_id is legitimate (e.g. a terminal mainstem
+    # draining to the ocean or the edge of the network). A self-referential
+    # value shouldn't occur in this release (unlike the HydroShare
+    # mainstems_v3.gpkg -- see README.md), but is guarded against anyway
+    # rather than emitting a nonsensical self-loop.
     if not downstream or downstream == row["uri"]:
         return None
     return {"@id": downstream}
@@ -165,7 +170,7 @@ def get_gpkg_path(file_location: str) -> Path:
         LOGGER.info("Found GeoPackage locally")
         return Path(file_location)
 
-    download_path = Path(__file__).parent / "mainstems_v3.gpkg"
+    download_path = Path(__file__).parent / "mainstems.gpkg"
     if download_path.exists():
         LOGGER.info(f"Reusing previously downloaded GeoPackage at {download_path}")
         return download_path
