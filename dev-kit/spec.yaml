@@ -22,6 +22,10 @@ permissions:
       - waterqualitydata.us
       - www.waterqualitydata.us
 
+      # source of the mainstems_v3.gpkg this integration reads
+      - www.hydroshare.org
+      - hydroshare.org
+
       # OpenFreeMap basemap tiles for the explorer map
       - tiles.openfreemap.org
 

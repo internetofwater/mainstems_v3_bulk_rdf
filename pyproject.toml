@@ -1,7 +1,24 @@
+# Copyright 2026 Lincoln Institute of Land Policy
+# SPDX-License-Identifier: MIT
+
 [project]
-name = "mainstems-bulk-rdf"
+name = "mainstems-bulk"
 version = "0.1.0"
-description = "Add your description here"
+description = "Geoconnex bulk RDF export for the USGS/Internet of Water mainstems_v3 dataset"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "requests>=2.33.1",
+    "shapely>=2.1.2",
+]
+
+[dependency-groups]
+dev = [
+    "prek>=0.3.8",
+    "pyright>=1.1.408",
+    "ruff>=0.15.8",
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
